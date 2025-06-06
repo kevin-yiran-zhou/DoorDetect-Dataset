@@ -1,0 +1,24 @@
+description: Ultralytics best model trained on dataset.yaml
+author: Ultralytics
+date: '2025-06-06T15:34:56.197144'
+version: 8.3.151
+license: AGPL-3.0 License (https://ultralytics.com/license)
+docs: https://docs.ultralytics.com
+stride: 32
+task: detect
+batch: 1
+imgsz:
+- 640
+- 640
+names:
+  0: door
+  1: handle
+  2: cabinet door
+  3: refrigerator door
+args:
+  batch: 1
+  fraction: 1.0
+  half: false
+  int8: false
+  nms: false
+channels: 3
