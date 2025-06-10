@@ -29,6 +29,14 @@ if os.path.exists(model_path):
     # Load images from test directory
     test_images = os.listdir(test_images_dir)
 
+    # Define confidence score thresholds
+    confidence_thresholds = {
+        'door': 0.5,  # Example threshold for doors
+        'handle': 0.3,  # Example threshold for door handles
+        'cabinet door': 0.5,  # Example threshold for cabinet doors
+        'refrigerator door': 0.5  # Example threshold for refrigerator doors
+    }
+
     for img in test_images:
         img_path = os.path.join(test_images_dir, img)
         # Run inference
@@ -80,10 +88,16 @@ if os.path.exists(model_path):
                     y1 = int(y_center - height / 2)
                     x2 = int(x_center + width / 2)
                     y2 = int(y_center + height / 2)
-                    # Draw rectangle with thicker lines
-                    plt.gca().add_patch(plt.Rectangle((x1, y1), width, height, edgecolor=color, facecolor='none', linewidth=3))
-                    # Add class label
-                    plt.text(x1, y1 - 10, class_name, color=color, fontsize=12, weight='bold')
+                    # Extract confidence score
+                    confidence = box.conf[0].cpu().numpy()
+                    # Check if the confidence is above the threshold for the class
+                    if confidence >= confidence_thresholds.get(class_name, 0.5):  # Default threshold if class not found
+                        # Format the label with class name and confidence
+                        label = f"{class_name} {confidence:.2f}"
+                        # Add class label with confidence
+                        plt.text(x1, y1 - 10, label, color=color, fontsize=12, weight='bold')
+                        # Draw rectangle with thicker lines
+                        plt.gca().add_patch(plt.Rectangle((x1, y1), width, height, edgecolor=color, facecolor='none', linewidth=3))
 
         plt.show()
 else:
